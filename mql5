@@ -1,0 +1,136 @@
+mql5
+//+------------------------------------------------------------------+
+//|                                             Apex Trader MT5.mq5 |
+//|                     Copyright 2022, Forex Robot Easy Team         |
+//|                                      https://forexroboteasy.com   |
+//+------------------------------------------------------------------+
+
+// Define input parameters
+input double LotSize = 0.01;                   // Lot size for opening positions
+input int MaxPositions = 5;                    // Maximum number of positions to open
+input double TakeProfit = 100;                 // Take profit level in pips
+input double GridStep = 50;                    // Grid step in pips
+input double GridMultiplier = 1.5;             // Grid multiplier for opening additional positions
+input double MinEquityPercentage = 50;         // Minimum equity percentage to continue opening positions
+input double MaxEquityPercentage = 80;         // Maximum equity percentage to stop opening positions
+
+// Define global variables
+int totalPositions = 0;                        // Total number of open positions
+double gridLevel = 0;                          // Current grid level
+double equityPercentage = 0;                   // Equity percentage
+
+//+------------------------------------------------------------------+
+//| Custom function to calculate equity percentage                    |
+//+------------------------------------------------------------------+
+double CalculateEquityPercentage()
+{
+   double equity = AccountEquity();
+   double balance = AccountBalance();
+   
+   return (equity / balance) * 100;
+}
+
+//+------------------------------------------------------------------+
+//| Expert advisor start function                                     |
+//+------------------------------------------------------------------+
+void OnStart()
+{
+   // Initialize variables
+   totalPositions = 0;
+   gridLevel = 0;
+   equityPercentage = CalculateEquityPercentage();
+   
+   // Loop through the selected currency pairs
+   for(int i = 0; i < SymbolsTotal(false); i++)
+   {
+      string symbol = SymbolName(i, false);
+      
+      // Check if the symbol is one of the specified currency pairs
+      if(symbol == 'AUDCAD' || symbol == 'AUDNZD' || symbol == 'NZDCAD')
+      {
+         // Calculate mean-reversion and trend-following indicators
+         double meanReversion = CalculateMeanReversion(symbol);
+         double trendFollowing = CalculateTrendFollowing(symbol);
+         
+         // Check if the conditions for opening a position are met
+         if(meanReversion > 0 && trendFollowing > 0)
+         {
+            // Calculate the position size based on equity percentage
+            double positionSize = AccountBalance() * (equityPercentage / 100) * LotSize;
+            
+            // Open a new position
+            if(OpenPosition(symbol, positionSize))
+            {
+               totalPositions++;
+               equityPercentage = CalculateEquityPercentage();
+               
+               // Check if the maximum number of positions is reached
+               if(totalPositions >= MaxPositions)
+               {
+                  break;
+               }
+            }
+         }
+      }
+   }
+}
+
+//+------------------------------------------------------------------+
+//| Custom function to calculate mean-reversion indicator             |
+//+------------------------------------------------------------------+
+double CalculateMeanReversion(string symbol)
+{
+   // Placeholder code for calculating mean-reversion indicator
+   return 1;
+}
+
+//+------------------------------------------------------------------+
+//| Custom function to calculate trend-following indicator            |
+//+------------------------------------------------------------------+
+double CalculateTrendFollowing(string symbol)
+{
+   // Placeholder code for calculating trend-following indicator
+   return 1;
+}
+
+//+------------------------------------------------------------------+
+//| Custom function to open a new position                            |
+//+------------------------------------------------------------------+
+bool OpenPosition(string symbol, double volume)
+{
+   // Placeholder code for opening a new position
+   return true;
+}
+
+//+------------------------------------------------------------------+
+//| Custom function to close all open positions                       |
+//+------------------------------------------------------------------+
+void CloseAllPositions()
+{
+   // Placeholder code for closing all open positions
+}
+
+//+------------------------------------------------------------------+
+//| Custom function to adjust take-profit level based on market       |
+//| conditions                                                        |
+//+------------------------------------------------------------------+
+void AdjustTakeProfitLevel()
+{
+   // Placeholder code for adjusting take-profit level
+}
+
+//+------------------------------------------------------------------+
+//| Custom function to handle errors                                   |
+//+------------------------------------------------------------------+
+void HandleError(string error)
+{
+   // Placeholder code for handling errors
+}
+
+//+------------------------------------------------------------------+
+//| Custom function to provide support and bug fixes                  |
+//+------------------------------------------------------------------+
+void ProvideSupportAndBugFixes()
+{
+   // Placeholder code for providing support and bug fixes
+}
